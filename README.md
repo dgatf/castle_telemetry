@@ -15,7 +15,7 @@ Interfacing the ESC with [Castle Serial Link](http://www.castlecreations.com/en/
  - R1 (4.7k) to Arduino PIN_SMARTPORT_TX (11)
 
 
-<img src="./images/esc_smartport9.png" width="600">
+<img src="./images/castle_link1.png" width="600">
 
 
 ## Adjust RPM sensor value
