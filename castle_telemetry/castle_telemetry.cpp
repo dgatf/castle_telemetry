@@ -10,10 +10,10 @@ boolean castleRead(uint8_t reg, uint16_t &value) {
   castleSerial.write(val);
   if (castleSerial.readBytes(buf, 3) == 3) {
     value = buf[0] << 8 | buf[1];
+    // crc
+    if (buf[0] + buf[1] + buf[2] == 0)
+      return true;
   }
-  // crc
-  if (buf[0] + buf[1] + buf[2] == 0)
-    return true;
   return false;
 }
 
