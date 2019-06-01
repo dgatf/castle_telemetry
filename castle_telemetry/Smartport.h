@@ -164,8 +164,10 @@ private:
 
 public:
   Smartport(Stream &serial);
-  void sendData(uint16_t dataId, int32_t val);
+  void sendData(uint16_t dataId, uint32_t val);
+  void sendData(uint16_t dataId, uint32_t val, uint8_t sensorId);
   void sendVoid();
+  void sendVoid(uint8_t sensorId);
   uint8_t readPacket(uint8_t data[]);
   uint8_t available();
   uint32_t formatData(uint16_t dataId, float value);

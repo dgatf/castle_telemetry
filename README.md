@@ -12,13 +12,13 @@ Interfacing the ESC with [Castle Serial Link](http://www.castlecreations.com/en/
 
  - For Pro Mini 3.3V: SmartPort Vcc to Arduino RAW. For Pro Mini 5V: SmartPort Vcc to Arduino Vcc
  - SmartPort Gnd to Arduino Gnd
- - Smartport Signal to Arduino PIN_SMARTPORT_RX (8)
+ - Smartport Signal to Arduino PIN_SMARTPORT_RX (7)
  - Smartport Signal to R1 (4.7k)
- - R1 (4.7k) to Arduino PIN_SMARTPORT_TX (11)
+ - R1 (4.7k) to Arduino PIN_SMARTPORT_TX (12)
  - Castle Serial Link Rx to Arduino Tx
  - Castle Serial Link Tx to Arduino Rx
 
-<img src="./images/castle_link1.png" width="600">
+<img src="./images/castle_link2.png" width="600">
 
 
 ## Adjust RPM sensor value

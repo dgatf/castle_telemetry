@@ -22,7 +22,25 @@ void Smartport::sendByte(uint8_t c, uint16_t *crcp) {
   _serial.write(c);
 }
 
-void Smartport::sendData(uint16_t dataId, int32_t val) {
+void Smartport::sendData(uint16_t dataId, uint32_t val, uint8_t sensorId) {
+  while (_serial.available() > 2) {
+    _serial.read();
+  }
+  while (1) {
+    while (!_serial.available()) {
+    }
+    if (_serial.read() == 0x7E) {
+      while (!_serial.available()) {
+      }
+      if (_serial.read() == sensorId) {
+        sendData(dataId, val);
+        return;
+      }
+    }
+  }
+}
+
+void Smartport::sendData(uint16_t dataId, uint32_t val) {
   digitalWrite(LED_SMARTPORT, HIGH);
   uint16_t crc = 0;
   uint8_t *u8p;
@@ -44,10 +62,26 @@ void Smartport::sendData(uint16_t dataId, int32_t val) {
 }
 
 void Smartport::sendVoid() {
-  for (uint8_t i = 0; i < 7; i++) {
-    _serial.write((uint8_t)0x00);
+  uint8_t buf[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF};
+  _serial.write(buf, 8);
+}
+
+void Smartport::sendVoid(uint8_t sensorId) {
+  while (_serial.available() > 2) {
+    _serial.read();
   }
-  _serial.write((uint8_t)0xFF);
+  while (1) {
+    while (!_serial.available()) {
+    }
+    if (_serial.read() == 0x7E) {
+      while (!_serial.available()) {
+      }
+      if (_serial.read() == sensorId) {
+        sendVoid();
+        return;
+      }
+    }
+  }
 }
 
 uint8_t Smartport::readPacket(uint8_t data[]) {

@@ -1,5 +1,25 @@
-#define PIN_SMARTPORT_RX 8  // only pins 8,9,10,11
-#define PIN_SMARTPORT_TX 11
+/*
+ * castle telemetry v0.1
+ *
+ * License https://www.gnu.org/licenses/gpl-3.0.en.html
+ *
+ * Arduino sketch to send to Frsky SmartPort Castle Serial Link telemetry
+ *
+ * Wiring
+ * ------
+ *
+ * - SmartPort Vcc to Arduino RAW
+ * - SmartPort Gnd to Arduino Gnd
+ * - Smartport Signal to Arduino PIN_SMARTPORT_RX (7)
+ * - Smartport Signal to R1 (4.7k)
+ * - R3 (4.7k) to Arduino PIN_SMARTPORT_TX (12)
+ * - Castle Serial Link Rx to Arduino Tx
+ * - Castle Serial Link Tx to Arduino Rx
+ *
+ */
+
+#define PIN_SMARTPORT_RX 7
+#define PIN_SMARTPORT_TX 12
 
 #define REG_VOLT 0
 #define REG_RIPPLE_VOLT 1
@@ -33,14 +53,14 @@
 #include <SoftwareSerial.h>
 
 struct Telemetry {
-  float *rpmP = NULL;
-  float *voltageP = NULL;
-  float *rippleVoltageP = NULL;
-  float *currentP = NULL;
-  float *becCurrentP = NULL;
-  float *becVoltageP = NULL;
-  float *temperatureP = NULL;
-  float *temperatureNtcP = NULL;
+  float rpm = 0;
+  float volt = 0;
+  float curr = 0;
+  float rippleVoltage = 0;
+  float becVolt = 0;
+  float becCurr = 0;
+  float temperature = 0;
+  float temperatureNtc = 0;
 };
 
 boolean castleRead(uint8_t reg, uint16_t &value);
@@ -50,3 +70,4 @@ void loop();
 Telemetry telemetry;
 SoftwareSerial smartportSerial(PIN_SMARTPORT_RX, PIN_SMARTPORT_TX, true);
 Smartport smartport(smartportSerial);
+uint32_t value3 = 200 ;
