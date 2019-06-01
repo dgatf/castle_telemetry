@@ -70,4 +70,3 @@ void loop();
 Telemetry telemetry;
 SoftwareSerial smartportSerial(PIN_SMARTPORT_RX, PIN_SMARTPORT_TX, true);
 Smartport smartport(smartportSerial);
-uint32_t value3 = 200 ;
