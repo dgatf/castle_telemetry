@@ -10,7 +10,7 @@ Interfacing the ESC with [Castle Serial Link](http://www.castlecreations.com/en/
 
 ## Wiring:
 
- - For Pro Mini 3.3V: SmartPort Vcc to Arduino RAW. For Pro Mini 5V: SmartPort Vcc to Arduino Vcc
+ - SmartPort Vcc to Arduino RAW
  - SmartPort Gnd to Arduino Gnd
  - Smartport Signal to Arduino PIN_SMARTPORT_RX (7)
  - Smartport Signal to R1 (4.7k)
