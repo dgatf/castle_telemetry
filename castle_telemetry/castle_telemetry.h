@@ -54,11 +54,7 @@
 
 struct Telemetry {
   uint32_t rpm = 0;
-  uint32_t volt = 0;
-  uint32_t curr = 0;
   uint32_t rippleVoltage = 0;
-  uint32_t becVolt = 0;
-  uint32_t becCurr = 0;
   uint32_t temperature = 0;
   uint32_t temperatureNtc = 0;
   uint32_t escPower = 0;
