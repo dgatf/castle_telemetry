@@ -20,7 +20,7 @@ Telemetry sensors (sensor ID: 10):
 
 <p align="center"><img src="./images/telemetry.bmp" width="300"></p>
 
-Note: my ESC (ICE2HV80) does not output bec and current telemetry 
+Note: my ESC (ICE2HV80) does not output bec and current telemetry   
 Note2: some sensors have custom names. This has to be done manually from edit sensor screen in openTx
 
 ## Wiring:
