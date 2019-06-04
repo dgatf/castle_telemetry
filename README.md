@@ -7,6 +7,17 @@ Send Castle Serial Link ESC telemetry to Frsky Smartport using an Arduino Pro Mi
 
 Interfacing the ESC with [Castle Serial Link](http://www.castlecreations.com/en/serial-link-010-0121-00) it is possible to send the telemetry to Smartport protocol using an Arduino
 
+Telemetry sensors (sensor ID: 10):
+
+- Voltage: sensor EscV (0x0B50)
+- Ripple voltage: sensor EscV (0x0B52)
+- Current: sensor EscA (0x0B50)
+- RPM: sensor EscR (0x0B60)
+- BEC voltage: sensor EscV (0x0B51)
+- BEC current: sensor EscA (0x0B51)
+- Temperature: sensor EscT (0x0B70)
+- Temperature NTC: sensor EscT (0x0B71)
+
 
 ## Wiring:
 

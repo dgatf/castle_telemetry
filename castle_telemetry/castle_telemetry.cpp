@@ -44,10 +44,10 @@ void loop() {
   smartport.sendData(ESC_RPM_CONS_FIRST_ID, telemetry.rpm,
                      SENSOR_ID_10);
   if (castleRead(REG_RIPPLE_VOLT, value1)) {
-    telemetry.rippleVoltage = smartport.formatData(
-        VFAS_FIRST_ID, (float)value1 / 2042 * SCALE_RIPPLE_VOLT);
+    telemetry.rippleVoltage = smartport.formatEscPower(
+        (float)value1 / 2042 * SCALE_VOLT, 0);
   }
-  smartport.sendData(VFAS_FIRST_ID, telemetry.rippleVoltage,
+  smartport.sendData(ESC_POWER_FIRST_ID + 2, telemetry.rippleVoltage,
                      SENSOR_ID_10);
   if (castleRead(REG_BEC_VOLT, value1) && castleRead(REG_BEC_CURR, value2)) {
     telemetry.escBecPower = smartport.formatEscPower(
