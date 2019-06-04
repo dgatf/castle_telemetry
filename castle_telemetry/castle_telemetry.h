@@ -40,11 +40,6 @@
 #define SCALE_RPM 20416.66
 #define SCALE_TEMP 30
 
-#define REFRESH_RPM 200
-#define REFRESH_VOLT 1000
-#define REFRESH_CURR 1000
-#define REFRESH_TEMP 1000
-
 #define CASTLESERIAL_TIMEOUT 9
 #define castleSerial Serial
 
