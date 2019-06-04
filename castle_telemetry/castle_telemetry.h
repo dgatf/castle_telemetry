@@ -45,7 +45,7 @@
 #define REFRESH_CURR 1000
 #define REFRESH_TEMP 1000
 
-#define CASTLESERIAL_TIMEOUT 2
+#define CASTLESERIAL_TIMEOUT 9
 #define castleSerial Serial
 
 #include "Smartport.h"
@@ -53,14 +53,16 @@
 #include <SoftwareSerial.h>
 
 struct Telemetry {
-  float rpm = 0;
-  float volt = 0;
-  float curr = 0;
-  float rippleVoltage = 0;
-  float becVolt = 0;
-  float becCurr = 0;
-  float temperature = 0;
-  float temperatureNtc = 0;
+  uint32_t rpm = 0;
+  uint32_t volt = 0;
+  uint32_t curr = 0;
+  uint32_t rippleVoltage = 0;
+  uint32_t becVolt = 0;
+  uint32_t becCurr = 0;
+  uint32_t temperature = 0;
+  uint32_t temperatureNtc = 0;
+  uint32_t escPower = 0;
+  uint32_t escBecPower = 0;
 };
 
 boolean castleRead(uint8_t reg, uint16_t &value);

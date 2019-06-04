@@ -1,6 +1,6 @@
 #include "Smartport.h"
 
-Smartport::Smartport(Stream &serial) : _serial(serial), elementP(), packetP() {
+Smartport::Smartport(Stream &serial) : _serial(serial) {
   pinMode(LED_SMARTPORT, OUTPUT);
 }
 
@@ -23,7 +23,7 @@ void Smartport::sendByte(uint8_t c, uint16_t *crcp) {
 }
 
 void Smartport::sendData(uint16_t dataId, uint32_t val, uint8_t sensorId) {
-  while (_serial.available() > 2) {
+  while (_serial.available()) {
     _serial.read();
   }
   while (1) {
@@ -67,7 +67,7 @@ void Smartport::sendVoid() {
 }
 
 void Smartport::sendVoid(uint8_t sensorId) {
-  while (_serial.available() > 2) {
+  while (_serial.available()) {
     _serial.read();
   }
   while (1) {
@@ -83,42 +83,6 @@ void Smartport::sendVoid(uint8_t sensorId) {
     }
   }
 }
-
-uint8_t Smartport::readPacket(uint8_t data[]) {
-  uint8_t cont = 0;
-  if (_serial.available()) {
-    uint16_t tsRead = millis();
-    uint16_t crc = 0;
-    while ((uint16_t)millis() - tsRead < SMARTPORT_TIMEOUT) {
-      if (_serial.available()) {
-        data[cont] = _serial.read();
-        if (data[cont] == 0x7D) {
-          data[cont] = _serial.read() ^ 0x20;
-        }
-        cont++;
-      }
-    }
-    if (data[0] != 0x7E)
-      return PACKET_TYPE_NONE;
-    if (cont == 10) {
-      for (uint8_t i = 2; i < 9; i++) {
-        crc += data[i];
-        crc += crc >> 8;
-        crc &= 0x00FF;
-      }
-      crc = 0xFF - (uint8_t)crc;
-      if (crc != data[9])
-        return PACKET_TYPE_NONE;
-      else
-        return PACKET_TYPE_PACKET;
-    }
-    if (cont == 2)
-      return PACKET_TYPE_POLL;
-  }
-  return PACKET_TYPE_NONE;
-}
-
-uint8_t Smartport::available() { return _serial.available(); }
 
 uint32_t Smartport::formatData(uint16_t dataId, float value) {
 
@@ -152,113 +116,4 @@ uint32_t Smartport::formatEscRpmCons(float rpm, float cons) {
 uint32_t Smartport::formatCell(uint8_t cellId, float val) {
   val *= 500;
   return (uint8_t)val << 8 | cellId;
-}
-
-float *Smartport::addElement(uint16_t dataId, uint16_t refresh) {
-  Element *newElementP = (Element *)malloc(sizeof(Element));
-  static Element *prevElementP;
-
-  if (elementP == NULL) {
-    elementP = newElementP;
-    prevElementP = elementP;
-  }
-
-  newElementP->nextP = elementP;
-  prevElementP->nextP = newElementP;
-  prevElementP = newElementP;
-
-  newElementP->ts = 0;
-  newElementP->dataId = dataId;
-  newElementP->refresh = refresh / 100;
-  newElementP->value = 0;
-
-  return &newElementP->value;
-}
-
-bool Smartport::addPacket(uint16_t dataId, uint32_t value) {
-  if (packetP == NULL) {
-    packetP = (Packet *)malloc(sizeof(Packet));
-    packetP->dataId = dataId;
-    packetP->value = value;
-    return true;
-  }
-  return false;
-}
-
-void Smartport::deleteElements() {
-  if (elementP != NULL) {
-    Element *delelemP = elementP;
-    Element *nextelemP;
-    do {
-      nextelemP = delelemP->nextP;
-      free(delelemP);
-      delelemP = nextelemP;
-    } while (nextelemP != elementP);
-    elementP = NULL;
-  }
-}
-
-uint8_t Smartport::processTelemetry(uint16_t &dataId, uint32_t &value) {
-  if (available()) {
-    uint8_t data[64];
-    uint8_t type;
-    type = readPacket(data);
-    if (type == PACKET_TYPE_POLL && data[1] == SMARTPORT_SENSOR) {
-      if (packetP != NULL) {
-        sendData(packetP->dataId, packetP->value);
-        dataId = packetP->dataId;
-        value = packetP->value;
-        free(packetP);
-        packetP = NULL;
-        return PACKET_SENT;
-      }
-      if (elementP != NULL) {
-        if ((uint16_t)millis() - elementP->ts >=
-            (uint16_t)elementP->refresh * 100) {
-          sendData(elementP->dataId, elementP->value);
-          elementP->ts = millis();
-          elementP = elementP->nextP;
-          dataId = elementP->dataId;
-          value = elementP->value;
-          return PACKET_SENT_TELEMETRY;
-        } else {
-          dataId = 0;
-          value = 0;
-          sendVoid();
-          elementP = elementP->nextP;
-          return PACKET_SENT_VOID;
-        }
-      }
-    } else if (type == PACKET_TYPE_PACKET && data[1] == SMARTPORT_SENSOR_TX) {
-      dataId = (uint16_t)data[4] << 8 | data[3];
-      value = (uint32_t)data[8] << 24 | (uint32_t)data[7] << 16 |
-              (uint16_t)data[6] << 8 | data[5];
-      return PACKET_RECEIVED;
-    }
-  }
-  return PACKET_NONE;
-}
-
-uint8_t Smartport::processTelemetry() {
-  if (available()) {
-    uint8_t data[64];
-    uint8_t type;
-    type = readPacket(data);
-    if (type == PACKET_TYPE_POLL && data[1] == SMARTPORT_SENSOR) {
-      if (elementP != NULL) {
-        if ((uint16_t)millis() - elementP->ts >=
-            (uint16_t)elementP->refresh * 100) {
-          sendData(elementP->dataId, elementP->value);
-          elementP->ts = millis();
-          elementP = elementP->nextP;
-          return PACKET_SENT_TELEMETRY;
-        } else {
-          sendVoid();
-          elementP = elementP->nextP;
-          return PACKET_SENT_VOID;
-        }
-      }
-    }
-  }
-  return PACKET_NONE;
 }

@@ -4,7 +4,6 @@
 #define LED_SMARTPORT LED_BUILTIN
 #define SMARTPORT_TIMEOUT 2
 #define SMARTPORT_SENSOR SENSOR_ID_10
-#define SMARTPORT_SENSOR_TX SENSOR_ID_11
 
 #define SENSOR_ID_1 0x00 // 0  int in opentx
 #define SENSOR_ID_2 0xA1
@@ -129,38 +128,14 @@
 #define FUEL_QTY_FIRST_ID 0x0a10 // 100 ml
 #define FUEL_QTY_LAST_ID 0x0a1f
 
-#define PACKET_TYPE_POLL 0
-#define PACKET_TYPE_PACKET 1
-#define PACKET_TYPE_NONE 2
-
-#define PACKET_SENT_TELEMETRY 0
-#define PACKET_SENT_VOID 1
-#define PACKET_RECEIVED 2
-#define PACKET_SENT 3
-#define PACKET_NONE 4
-
 #include <Arduino.h>
 
 class Smartport {
 
 private:
-  struct Element {
-    uint16_t dataId;
-    float value;
-    uint8_t refresh;
-    uint16_t ts;
-    Element *nextP;
-  };
-
-  struct Packet {
-    uint16_t dataId;
-    float value;
-  };
 
   void sendByte(uint8_t c, uint16_t *crcp);
   Stream &_serial;
-  Element *elementP = NULL;
-  Packet *packetP = NULL;
 
 public:
   Smartport(Stream &serial);
@@ -168,17 +143,10 @@ public:
   void sendData(uint16_t dataId, uint32_t val, uint8_t sensorId);
   void sendVoid();
   void sendVoid(uint8_t sensorId);
-  uint8_t readPacket(uint8_t data[]);
-  uint8_t available();
   uint32_t formatData(uint16_t dataId, float value);
   uint32_t formatEscPower(float volt, float curr);
   uint32_t formatEscRpmCons(float rpm, float cons);
   uint32_t formatCell(uint8_t cellId, float val);
-  float *addElement(uint16_t dataId, uint16_t refresh);
-  bool addPacket(uint16_t dataId, uint32_t value);
-  void deleteElements();
-  uint8_t processTelemetry(uint16_t &dataId, uint32_t &value);
-  uint8_t processTelemetry();
 };
 
 #endif
