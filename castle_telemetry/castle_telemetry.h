@@ -43,6 +43,8 @@
 #define CASTLESERIAL_TIMEOUT 9
 #define castleSerial Serial
 
+#define OPENTX_BEC_FIX
+
 #include "Smartport.h"
 #include <Arduino.h>
 #include <SoftwareSerial.h>

@@ -39,21 +39,31 @@ void loop() {
   }
   smartport.sendData(ESC_POWER_FIRST_ID, telemetry.escPower, SENSOR_ID_10);
   if (castleRead(REG_RPM, value1)) {
-      telemetry.rpm = smartport.formatEscRpmCons((float)value1 / 2042 * SCALE_RPM, 0);
+    telemetry.rpm =
+        smartport.formatEscRpmCons((float)value1 / 2042 * SCALE_RPM, 0);
   }
-  smartport.sendData(ESC_RPM_CONS_FIRST_ID, telemetry.rpm,
-                     SENSOR_ID_10);
+  smartport.sendData(ESC_RPM_CONS_FIRST_ID, telemetry.rpm, SENSOR_ID_10);
   if (castleRead(REG_RIPPLE_VOLT, value1)) {
-    telemetry.rippleVoltage = smartport.formatEscPower(
-        (float)value1 / 2042 * SCALE_VOLT, 0);
+    telemetry.rippleVoltage =
+        smartport.formatEscPower((float)value1 / 2042 * SCALE_VOLT, 0);
   }
   smartport.sendData(ESC_POWER_FIRST_ID + 2, telemetry.rippleVoltage,
                      SENSOR_ID_10);
   if (castleRead(REG_BEC_VOLT, value1) && castleRead(REG_BEC_CURR, value2)) {
+#ifdef OPENTX_BEC_FIX
+    telemetry.escBecPower = smartport.formatBecPower(
+        (float)value1 / 2042 * SCALE_BEC, (float)value2 / 2042 * SCALE_BEC);
+#else
     telemetry.escBecPower = smartport.formatEscPower(
         (float)value1 / 2042 * SCALE_BEC, (float)value2 / 2042 * SCALE_BEC);
+#endif
   }
-  smartport.sendData(ESC_POWER_FIRST_ID + 1, telemetry.escBecPower, SENSOR_ID_10);
+#ifdef OPENTX_BEC_FIX
+  smartport.sendData(SBEC_POWER_FIRST_ID, telemetry.escBecPower, SENSOR_ID_10);
+#else
+  smartport.sendData(ESC_POWER_FIRST_ID + 1, telemetry.escBecPower,
+                     SENSOR_ID_10);
+#endif
   if (castleRead(REG_TEMP, value1)) {
     telemetry.temperature = smartport.formatData(
         ESC_TEMPERATURE_FIRST_ID, (float)value1 / 2042 * SCALE_TEMP);
