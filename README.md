@@ -13,8 +13,8 @@ Telemetry sensors (sensor ID: 10):
 - Ripple voltage: sensor EscV (0x0B52)
 - Current: sensor EscA (0x0B50)
 - RPM: sensor EscR (0x0B60)
-- BEC voltage: sensor EscV (0x0B51)
-- BEC current: sensor EscA (0x0B51)
+- BEC voltage: sensor EscV (0x0B51) or BecV (0x0E50)
+- BEC current: sensor EscA (0x0B51) or BecA (0x0E50)
 - Temperature: sensor EscT (0x0B70)
 - Temperature NTC: sensor EscT (0x0B71)
 
