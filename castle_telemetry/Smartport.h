@@ -110,7 +110,7 @@
 #define GASSUIT_MAX_FLOW_LAST_ID 0x0d6f
 #define GASSUIT_AVG_FLOW_FIRST_ID 0x0d70 // 1 ml
 #define GASSUIT_AVG_FLOW_LAST_ID 0x0d7f
-#define SBEC_POWER_FIRST_ID 0x0e50 // bug opentx
+#define SBEC_POWER_FIRST_ID 0x0e50 // bug opentx 2.2.3. fixed 2.2.4: bytes 1,2: 1000 V,  bytes 3,4: 1000 A
 #define SBEC_POWER_LAST_ID 0x0e5f
 #define DIY_FIRST_ID 0x5100
 #define DIY_LAST_ID 0x52ff
@@ -145,6 +145,7 @@ public:
   void sendVoid(uint8_t sensorId);
   uint32_t formatData(uint16_t dataId, float value);
   uint32_t formatEscPower(float volt, float curr);
+  uint32_t formatBecPower(float volt, float curr);
   uint32_t formatEscRpmCons(float rpm, float cons);
   uint32_t formatCell(uint8_t cellId, float val);
 };
